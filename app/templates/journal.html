@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Entry</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #00171F;
+            color: #ADEBFF;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: 70px;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #003459;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header img {
+            width: 50px;
+            height: 50px;
+            margin-left: 20px;
+        }
+
+        .header p {
+            font-size: 2.2rem;
+            margin: 0;
+            color: #ADEBFF;
+            font-weight: bold;
+        }
+
+        /* Logout Link */
+        .logout-link {
+            color: #FFB84D;
+            text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 1.5rem;
+            padding: 10px;
+            transition: color 0.3s;
+            margin-right: 40px;
+        }
+
+        .logout-btn i {
+            font-size: 2rem;
+        }
+
+        .logout-btn span {
+            margin-top: 5px;
+            font-size: 2rem;  /* Text size */
+            color: #0099FF;
+        }
+
+        .logout-btn:hover {
+            background-color: #FF2D2D;
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: #003459;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            flex-grow: 1;
+        }
+
+        h1 {
+            color: #ADEBFF;
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ADEBFF;
+            background-color: #00171F;
+            color: #ADEBFF;
+            outline: none;
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .save-button {
+            background-color: #ADEBFF;
+            color: #003459;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            display: block;
+            margin: 30px auto;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .save-button:hover {
+            background-color: #0099FF;
+            transform: translateY(-3px);
+        }
+
+        /* Footer Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #003459;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .navbar a {
+            color: #ADEBFF;
+            text-decoration: none;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .navbar a div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar i {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .navbar a:hover {
+            color: #0099FF;
+        }
+
+        .more {
+            position: relative;
+        }
+
+        .more-dropdown {
+            display: none;
+            position: absolute;
+            background-color: #00171F;
+            top: 35px;
+            left: 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .more:hover .more-dropdown {
+            display: block;
+        }
+
+        .more-dropdown a {
+            color: #ADEBFF;
+            padding: 8px 15px;
+            display: block;
+            text-decoration: none;
+        }
+
+        .more-dropdown a:hover {
+            background-color: #003459;
+        }
+
+        /* Footer Styling */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #003459;
+            color: #ADEBFF;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: row;
+                padding: 15px;
+            }
+
+            .navbar a {
+                font-size: 10px 0;
+            }
+
+            .navbar i {
+                font-size: 1.2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header with Logo, appname, and Logout Button -->
+    <div class="header">
+        <img src="/static/images/logo.png" alt="App Logo for the Dashboard">
+        <p>Jijali  Journal</p>
+
+    <!-- Logout Link -->
+        <a href="#" class="logout-link" onclick="logoutUser(event)">
+        <div>
+            <i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i>
+            <span>Logout</span>
+        </div>
+        </a>
+
+
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <form id="journal-form">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" placeholder="Journal Title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="todays_happenings">What happened today?</label>
+                <textarea name="today" id="today" placeholder="Type your thoughts here..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="special_moment">Was there any moment today that stood out to you in a special or unexpected way?</label>
+                <textarea name="special_moment" id="special_moment" placeholder="Type your thoughts here..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="redo_your_day">If you could redo any part of your day, what would you do differently to create a more positive experience for yourself?</label>
+                <textarea name="redo_your_day" id="redo_your_day" placeholder="Type your thoughts here..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="handling_stress">Was there a moment of stress or challenge that you wish you would have handled differently?</label>
+                <textarea name="handling_stress" id="handling_stress" placeholder="Type your thoughts here..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="done_different">What could you have done to handle it differently?</label>
+                <textarea name="done_different" id="done_different" placeholder="Type your thoughts here..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="thoughts_and_emotions">How did your thoughts and emotions influence your actions today?</label>
+                <textarea name="thoughts_and_emotions" id="thoughts_and_emotions" placeholder="Type your thoughts here..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="gratitude">What are three things you are grateful for today?</label>
+                <textarea name="gratitude" id="gratitude" placeholder="Type your thoughts here..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="goals_and_intention">What goal, intention or positive habit would you like to prioritize tomorrow?</label>
+                <textarea name="goals_and_intention" id="goals_and_intention" placeholder="Type your thoughts here..." required></textarea>
+            </div>
+
+            <!-- Save Button -->
+            <button type="submit" class="save-button">Save</button>
+        </form>
+    </div>
+
+    <!-- Footer with Navigation Bar -->
+        <footer class="navbar">
+        <a href="/dashboard" class="navbar-item" id="home-link">
+            <div>
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </div>
+        </a>
+        <a href="/journals" class="navbar-item" id="journal-link">
+            <div>
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Journal</span>
+            </div>
+        </a>
+        <a href="/moods" class="navbar-item" id="mood-link">
+            <div>
+                <i class="fa-regular fa-face-laugh"></i>
+                <span>Mood</span>
+            </div>
+        </a>
+        <a href="/entries" class="navbar-item" id="entries-link">
+            <div>
+                <i class="fa-regular fa-folder-open"></i>
+                <span>Entries</span>
+            </div>
+        </a>
+    </footer>
+
+    <script>
+        // Function to format the time to the desired format (Date and Time)
+        function formatTime(date) {
+            const months = ["January", "February", "March", "April", "May", "June", 
+                            "July", "August", "September", "October", "November", "December"];
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    
+            const dayName = days[date.getDay()];
+            const monthName = months[date.getMonth()];
+            const dateOfMonth = date.getDate();
+            const year = date.getFullYear();
+            
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+            // Convert to 12-hour format
+            hours = hours % 12;
+            hours = hours ? hours : 12; // Hour '0' should be '12'
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+    
+            // Return formatted date and time (e.g., "Monday, January 5, 2025, 10:30 AM")
+            return `${dayName}, ${monthName} ${dateOfMonth}, ${year} - ${hours}:${minutes} ${ampm}`;
+        }
+    
+        // Update the journal title with the current date and time
+        function setJournalTitle() {
+            const now = new Date();
+            const formattedDateTime = formatTime(now);
+            document.getElementById('title').value = `Journal - ${formattedDateTime}`;
+        }
+    
+        // Set the journal title when the page loads
+        window.onload = function() {
+            setJournalTitle();
+        };
+
+        // Handle form submission
+        document.getElementById('journal-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+    
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You are not logged in.');
+                return;
+            }
+
+            const formData = new FormData(event.target);
+            const journalData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/journal', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(journalData)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Journal saved successfully!');
+                } else {
+                    alert('Failed to save journal: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while saving your journal.');
+            }
+        });
+
+        // Logout function
+        function logoutUser(event) {
+            event.preventDefault();
+            localStorage.removeItem('token');
+            alert("Logged out successfully!");
+            window.location.href = "/login";
+        }
+    </script>
+</body>
+</html>

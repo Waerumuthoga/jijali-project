@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jijali is a web application dedicated to enhancing mental well-being through reflective journaling, offering emotional clarity, stress management, self-reflection, and perspective reframing.">
+    <title>Jijali - Your Companion for Mental Wellness</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F4F4F9;
+            color: #00171F; /* Rich Black */
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .cover-image {
+            width: 100%;
+            height: 70vh;
+            background: url('/static/images/cover-image.jpg') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #FFFFFF;
+        }
+
+        .cover-image h1 {
+            margin: 0;
+            font-size: 3em;
+        }
+
+        .cover-image p {
+            font-size: 1.5em;
+        }
+
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 100%;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #FFFFF0; /* text is white for better visibility */
+            font-weight: bold;
+            display: inline-block;
+            padding: 10px;
+        }
+
+        nav a:hover {
+            color: #F4F4F9; /* Lighter color for hover effect */
+            background-color: #00171F; /* Darker background on hover */
+            border-radius: 5px;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #003459;
+            margin-bottom: 15px;
+            font-size: 2em; /* Adjusted for better responsiveness */
+        }
+
+        .section p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .features, .benefits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .feature-item, .benefits-item {
+            flex: 1;
+            min-width: 250px;
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-item img, .benefits-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .feature-item h3, .benefits-item h3 {
+            color: #003459;
+            margin-bottom: 10px;
+        }
+
+        .call-to-action {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .cta-btn {
+            background-color: #003459;
+            color: #FFFFFF;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            text-decoration: none;
+            margin: 10px;
+            display: inline-block;
+        }
+
+        .cta-btn:hover {
+            background-color: #00171F;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .cover-image h1 {
+                font-size: 2.5em;
+            }
+
+            .cover-image p {
+                font-size: 1.2em;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+
+            .cta-btn {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cover-image h1 {
+                font-size: 2em;
+            }
+
+            .cover-image p {
+                font-size: 1em;
+            }
+
+            .section h2 {
+                font-size: 1.3em;
+            }
+
+            .section p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="cover-image">
+            <h1>Jijali</h1>
+            <p>Your Companion for Mental Wellness</p>
+            <a href="/login" class="cta-btn">Visit the App</a>
+        </div>
+        <nav>
+            <a href="#overview">Overview</a>
+            <a href="#features">Features</a>
+            <a href="#benefits">Benefits</a>
+            <a href="#how-to">How to Use</a>
+            <a href="#about">About</a>
+            <a href="#cta">Get Started</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="section" id="overview">
+            <h2>Overview</h2>
+            <p>
+                Jijali is a thoughtfully designed web application dedicated to enhancing your mental well-being through reflective journaling. Our platform helps you process and understand your emotions, feelings, and experiences by focusing on cognitive processing and emotional expression.
+            </p>
+            <p>
+                Crafted with user experience in mind, Jijali offers a range of features that support your journaling journey and mental wellness. Whether you seek emotional clarity, stress management, self-reflection, or a new perspective on life, Jijali provides the tools and guidance you need to navigate your mental health journey confidently.
+            </p>
+        </div>
+
+        <div class="section" id="features">
+            <h2>Features</h2>
+            <div class="features">
+                <div class="feature-item">
+                    <img src="/static/images/mood_tracker.png" alt="Mood Tracker Image">
+                    <h3>Mood Tracker</h3>
+                    <p>Track your mood throughout the day and identify patterns in your emotions.</p>
+                </div>
+                <div class="feature-item">
+                    <img src="/static/images/thoughts.png" alt="Journaling Image">
+                    <h3>Journaling</h3>
+                    <p>Maintain a daily journal to reflect on your thoughts, experiences, and progress.</p>
+                </div>
+                <div class="feature-item">
+                    <img src="/static/images/reminders.png" alt="Self-Care Reminders Image">
+                    <h3>Self-Care Reminders</h3>
+                    <p>Set reminders for self-care activities to ensure you're taking care of yourself.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="benefits">
+            <h2>Benefits</h2>
+            <div class="benefits">
+                <div class="benefits-item">
+                    <img src="/static/images/emotions.jpeg" alt="Emotional Clarity Image">
+                    <h3>Emotional Clarity</h3>
+                    <p>Journaling offers a secure and private space to articulate emotions that might be challenging to express verbally. This practice can help alleviate the intensity of these feelings and provide a deeper understanding of your emotional state.</p>
+                </div>
+                <div class="benefits-item">
+                    <img src="/static/images/stress.jpeg" alt="Stress Management Image">
+                    <h3>Stress Management</h3>
+                    <p>Journaling allows you to organize your thoughts and break down stressors into smaller, manageable pieces. This process can make overwhelming situations feel more controllable and less intimidating.</p>
+                </div>
+                <div class="benefits-item">
+                    <img src="/static/images/insight.jpeg" alt="Self-Reflection and Insight Image">
+                    <h3>Self-Reflection and Insight</h3>
+                    <p>Regular journaling aids in recognizing patterns in your thoughts and behaviors, which fosters personal growth and self-awareness. It also helps identify triggers and develop effective coping strategies.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="how-to">
+            <h2>How to Get Started</h2>
+            <div class="features">
+                <div class="feature-item">
+                    <h3>Step 1: Sign Up</h3>
+                    <p>Create an account by registering with your email and password.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Step 2: Set Up Profile</h3>
+                    <p>Complete your profile with basic information to personalize your experience.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Step 3: Start Using the App</h3>
+                    <p>Begin tracking your mood, journaling, and receiving insights right away.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="about">
+            <h2>About Jijali</h2>
+            <p>
+                Jijali was inspired by a deep need and passion for helping others. With the constant influx of mental health issues, we wrestled with the question of how people engage with their mental health and the challenges they face that hinder their ability to enhance their well-being. Through deep reflection and extensive research, we recognized the power of reflective journaling, a key practice in Cognitive Behavioral Therapy (CBT).
+            </p>
+            <p>
+                Journaling offers a meaningful, non-pharmacological approach to improving mental health, providing clarity and fostering emotional growth. This realization led to the development of Jijali, an application designed to make reflective journaling accessible to anyone looking to better understand their emotions and improve their mental wellness.
+            </p>
+            <p>
+                Jijali serves as a supportive companion, offering an intuitive platform for users to reflect, grow, and manage their mental health with care and intention.
+            </p>
+            <p>
+                Explore the project repository and follow my work through the following links:
+                <ul>
+                    <li><a href="https://github.com/Waerumuthoga/jijali" target="_blank">Project GitHub Repository</a></li>
+                    <li><a href="https://www.linkedin.com/in/jeremymuthoga" target="_blank">LinkedIn</a></li>
+                    <li><a href="https://github.com/Waerumuthoga" target="_blank">GitHub Repository</a></li>
+                    <li><a href="https://twitter.com/waerumuthoga" target="_blank">Twitter</a></li>
+                </ul>
+            </p>
+        </div>
+
+        <!-- Call to Action Section -->
+        <div class="call-to-action" id="cta">
+            <h2>Ready to Get Started?</h2>
+            <a href="/login" class="cta-btn">Login</a>
+            <a href="/users/register" class="cta-btn">Register</a>
+        </div>
+    </div>
+</body>
+</html>

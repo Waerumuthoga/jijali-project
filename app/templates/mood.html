@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mood tracking and reflection application">
+    <title>Moods</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #00171F;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            padding-top: 70px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #003459;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header img {
+            width: 50px;
+            height: 50px;
+            margin-left: 20px;
+        }
+
+        .header p {
+            font-size: 2.2rem;
+            margin: 0;
+            color: #ADEBFF;
+            font-weight: bold;
+        }
+
+        /* Logout Link */
+        .logout-link {
+            color: #FFB84D;
+            text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 1.5rem;
+            padding: 10px;
+            transition: color 0.3s;
+            margin-right: 40px;
+        }
+
+        .logout-btn i {
+            font-size: 2rem;
+        }
+
+        .logout-btn span {
+            margin-top: 5px;
+            font-size: 2rem;  /* Text size */
+            color: #0099FF;
+        }
+
+        .logout-btn:hover {
+            background-color: #FF2D2D;
+        }
+
+        .mood-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .mood-container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .mood-container p {
+            color: #ADEBFF;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .form-group .mood-selection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .mood-emoji {
+            margin: 15px;
+            cursor: pointer;
+            transition: transform 0.3s, opacity 0.2s;
+        }
+
+        .mood-emoji:hover {
+            transform: scale(1.2);
+            opacity: 0.8;
+        }
+
+        .mood-emoji img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .reflection-form {
+            background-color: #003459;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 700px;
+            margin: 30px auto 80px auto; /* Adjust bottom margin to ensure space for footer */
+            display: none;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+        }
+
+        .form-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ADEBFF;
+            background-color: #00171F;
+            color: #ADEBFF;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            background-color: #ADEBFF;
+            color: #003459;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1.2rem;
+            width: 100%; /* Ensure button fits */
+        }
+
+        .submit-btn:hover {
+            background-color: #0099FF;
+        }
+
+        /* Footer Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #003459;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100; /* Ensure footer stays above content */
+        }
+
+        .navbar a {
+            color: #ADEBFF;
+            text-decoration: none;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .navbar a div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar i {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .navbar a:hover {
+            color: #0099FF;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: row;
+                padding: 15px;
+            }
+            
+            .navbar a {
+                font-size: 10px 0;
+            }
+
+            .navbar i {
+                font-size: 1.2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .mood-emoji img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .reflection-form {
+                padding: 20px;
+            }
+
+            .submit-btn {
+                width: 100%;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header with Logo, appname, and Logout Button -->
+    <div class="header">
+        <img src="/static/images/logo.png" alt="App Logo for the Dashboard">
+        <p>Jijali Mood-Tracker</p>
+
+    <!-- Logout Link -->
+        <a href="#" class="logout-link" onclick="logoutUser(event)">
+        <div>
+            <i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i>
+            <span>Logout</span>
+        </div>
+        </a>
+
+
+    </div>
+
+    <!-- Mood Selection Section -->
+    <div class="mood-container">
+        <h1>How are you feeling today?</h1>
+        <p id="current-time" aria-live="polite"></p>
+
+        <!-- Form Group for Mood Selection -->
+        <div class="form-group">
+            <label for="mood">Select your mood:</label>
+            <div class="mood-selection">
+                <div class="mood-emoji" data-mood="rad" role="button" aria-label="Feeling rad">
+                    <img src="/static/images/emoji-rad.png" alt="Emoji representing feeling rad">
+                    <p>Rad</p>
+                </div>
+                <div class="mood-emoji" data-mood="good" role="button" aria-label="Feeling good">
+                    <img src="/static/images/emoji-good.png" alt="Emoji representing feeling good">
+                    <p>Good</p>
+                </div>
+                <div class="mood-emoji" data-mood="meh" role="button" aria-label="Feeling meh">
+                    <img src="/static/images/emoji-meh.png" alt="Emoji representing feeling meh">
+                    <p>Meh</p>
+                </div>
+                <div class="mood-emoji" data-mood="bad" role="button" aria-label="Feeling bad">
+                    <img src="/static/images/emoji-bad.png" alt="Emoji representing feeling bad">
+                    <p>Bad</p>
+                </div>
+                <div class="mood-emoji" data-mood="awful" role="button" aria-label="Feeling awful">
+                    <img src="/static/images/emoji-awful.png" alt="Emoji representing feeling awful">
+                    <p>Awful</p>
+                </div>
+            </div>
+            <!-- Hidden input to store the selected mood -->
+            <input type="hidden" name="mood" id="selected-mood-input">
+        </div>
+    </div>
+
+    <!-- Reflection Form Section -->
+    <div class="reflection-form" id="reflection-form">
+        <h2>Reflect on Your Mood</h2>
+
+        <div class="form-section">
+            <label for="selected-mood">Current Mood:</label>
+            <span id="selected-mood"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="feel">What made you feel like that?</label>
+            <textarea name="feel" id="feel" placeholder="Type your thoughts here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="todays_influence">Can you describe any specific events, interactions or thoughts that influenced your mood?</label>
+            <textarea name="todays_influence" id="todays_influence" placeholder="Type your thoughts here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="mood_shift">What is one small thing you could do right now to shift your mood?</label>
+            <textarea name="mood_shift" id="mood_shift" placeholder="Type your thoughts here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="fears_and_anxieties">What fears or anxieties were triggered today?</label>
+            <textarea name="fears_and_anxieties" id="fears_and_anxieties" placeholder="Type your thoughts here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="affect">How did they affect your emotions, thoughts, or actions?</label>
+            <textarea name="affect" id="affect" placeholder="Type your thoughts here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="steps">What steps can you take to face these fears with more confidence or calm next time?</label>
+            <textarea name="steps" id="steps" placeholder="Type your thoughts here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="negative_self_talk">Did you experience any negative self-talk today?</label>
+            <textarea name="negative_self_talk" id="negative_self_talk" placeholder="Type your thoughts here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="main_thoughts">What were the main thoughts or beliefs behind it?</label>
+            <textarea name="main_thoughts" id="main_thoughts" placeholder="Type your thoughts here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="support">What kind of support would be most helpful to you right now and who could you reach out to?</label>
+            <textarea name="support" id="support" placeholder="Type your thoughts here..." required></textarea>
+        </div>
+
+        <button class="submit-btn" onclick="submitForm()">Save Reflection</button>
+    </div>
+
+    <!-- Footer with Navigation Bar -->
+    <footer class="navbar">
+        <a href="/dashboard" class="navbar-item" id="home-link">
+            <div>
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </div>
+        </a>
+        <a href="/journals" class="navbar-item" id="journal-link">
+            <div>
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Journal</span>
+            </div>
+        </a>
+        <a href="/moods" class="navbar-item" id="mood-link">
+            <div>
+                <i class="fa-regular fa-face-laugh"></i>
+                <span>Mood</span>
+            </div>
+        </a>
+        <a href="/entries" class="navbar-item" id="entries-link">
+            <div>
+                <i class="fa-regular fa-folder-open"></i>
+                <span>Entries</span>
+            </div>
+        </a>
+    </footer>
+
+    <script>
+        // Update the date and time
+        function updateTime() {
+            const now = new Date();
+            const formattedTime = now.toLocaleString();
+            document.getElementById('current-time').innerText = `Today, ${formattedTime}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000); // Update every minute
+
+        // Show the reflection form after emoji selection
+        document.querySelectorAll('.mood-emoji').forEach(function (emoji) {
+            emoji.addEventListener('click', function () {
+                const selectedMood = emoji.getAttribute('data-mood');
+                document.getElementById('selected-mood-input').value = selectedMood;
+                document.getElementById('reflection-form').style.display = 'block';
+                document.getElementById('selected-mood').innerText = selectedMood;
+            });
+        });
+
+        // Handle form submission
+        document.getElementById('reflection-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+    
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You are not logged in.');
+                return;
+            }
+
+            const formData = new FormData(event.target);
+            const journalData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/mmod', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(moodData)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Mood reflection saved successfully!');
+                } else {
+                    alert('Failed to save mood reflection: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while saving your mood reflection.');
+            }
+        });
+
+        // Logout function
+        function logoutUser(event) {
+            event.preventDefault();
+            localStorage.removeItem('token');
+            alert("Logged out successfully!");
+            window.location.href = "/login";
+        }
+    </script>
+</body>
+
+</html>

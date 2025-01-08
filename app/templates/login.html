@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        :root {
+            --rich-black: #00171F;
+            --prussian-blue: #003459;
+            --non-photo-blue: #ADEBFF;
+            --white: #FFFFFF;
+            --light-gray: #F4F4F4;
+            --soft-peach: #E6D1C3;
+        }
+        body {
+            background-color: var(--white);
+            color: var(--prussian-blue);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--light-gray);
+        }
+        .illustration {
+            width: 80%;
+            max-width: 400px;
+            margin-bottom: 30px;
+        }
+        .welcome-text {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--prussian-blue);
+        }
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .input-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 25px;
+            border: 1px solid var(--prussian-blue);
+            font-size: 16px;
+            color: var(--rich-black);
+            background-color: var(--white);
+        }
+        .input-container input::placeholder {
+            color: var(--prussian-blue);
+        }
+        .input-icon {
+            position: relative;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .input-icon img {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+        }
+        .input-icon input {
+            padding-left: 50px;
+        }
+        .login-button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 25px;
+            background-color: var(--prussian-blue);
+            color: var(--white);
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .login-button:hover {
+            background-color: var(--rich-black);
+        }
+        .forgot-password {
+            margin-top: 10px;
+            color: var(--prussian-blue);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .register-link {
+            margin-top: 20px;
+            color: var(--prussian-blue);
+        }
+        .register-link a {
+            color: var(--prussian-blue);
+            text-decoration: none;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        .illustration img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="illustration">
+            <img src="/static/images/illustration.png" alt="Illustration of someone unwinding">
+        </div>
+
+        <div class="welcome-text">Welcome</div>
+
+        <form id="loginForm">
+            <div class="input-container">
+                <div class="input-icon">
+                    <!-- <img src="/static/images/user-icon.png" alt="User Icon"> -->
+                    <input type="text" id="username" name="username" placeholder="Email" required>
+                </div>
+                <div class="input-icon">
+                    <!-- <img src="/static/images/lock-icon.png" alt="Lock Icon"> -->
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+            </div>
+
+            <button type="submit" class="login-button">Log in</button>
+        </form>
+
+        <div class="forgot-password">
+            <a href="/password_reset">Forgot Password</a>
+        </div>
+
+        <div class="register-link">
+            <p>Don't Have an Account? <a href="/users/register">Register</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data),
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('Login successful!'); // Show success message
+
+                    // Store the access token if needed
+                    localStorage.setItem('access_token', result.access_token);
+                    
+                    // Redirect to the dashboard
+                    window.location.href = '/dashboard'; 
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.detail}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An unexpected error occurred.');
+            }
+        });
+    </script>
+</body>
+</html>

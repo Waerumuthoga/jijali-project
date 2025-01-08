@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <style>
+        body {
+            background-color: #00171F; /* Rich Black */
+            color: #ADEBFF; /* Non-Photo Blue */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 10px;
+            background-color: #003459; /* Prussian Blue */
+        }
+
+        .header img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            margin: 5px 0;
+            color: #ADEBFF; /* Non-Photo Blue */
+        }
+
+        .calendar-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #003459; /* Prussian Blue */
+            border-radius: 10px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar .header {
+            background-color: #003459; /* Prussian Blue */
+            padding: 10px;
+            color: #ADEBFF; /* Non-Photo Blue */
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .calendar .day {
+            background-color: #ADEBFF; /* Non-Photo Blue */
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            color: #003459; /* Prussian Blue */
+            position: relative;
+            cursor: pointer;
+        }
+
+        .calendar .day.empty {
+            background-color: transparent;
+        }
+
+        .calendar .day.today {
+            background-color: #FF4D4D; /* Red color for today */
+            color: #FFFFFF; /* White text color */
+        }
+
+        .calendar .day .entry-indicator {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 10px;
+            height: 10px;
+            background-color: #FF4D4D; /* Red color */
+            border-radius: 50%;
+        }
+
+        .day-details {
+            display: none;
+            position: absolute;
+            background-color: #ADEBFF;
+            color: #003459;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 200px;
+            top: 50px;
+            left: 0;
+            z-index: 10;
+        }
+
+        .day-details.active {
+            display: block;
+        }
+
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background-color: #ADEBFF; /* Non-Photo Blue */
+            padding: 10px 0;
+        }
+
+        .navbar div {
+            text-align: center;
+        }
+
+        .navbar img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .navbar span {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #003459; /* Prussian Blue */
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logout-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .logout-link img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+
+        .logout-link span {
+            font-size: 16px;
+        }
+
+        .logout-link:hover {
+            background-color: #FF4D4D; /* Red color for logout on hover */
+            color: #FFFFFF; /* White text color */
+        }
+
+        @media (max-width: 768px) {
+            .calendar .day {
+                padding: 5px;
+                font-size: 0.8rem;
+            }
+
+            .navbar img {
+                width: 25px;
+                height: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <img src="/static/images/logo.png" alt="App Logo">
+        <p id="current-date">Calendar</p>
+    </div>
+
+    <!-- Calendar Content -->
+    <div class="calendar-container">
+        <div class="calendar">
+            <div class="header">Sun</div>
+            <div class="header">Mon</div>
+            <div class="header">Tue</div>
+            <div class="header">Wed</div>
+            <div class="header">Thu</div>
+            <div class="header">Fri</div>
+            <div class="header">Sat</div>
+            <!-- Calendar days will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Day Details Popup -->
+    <div class="day-details" id="day-details"></div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="/entries">
+            <div>
+                <img src="/static/images/entries_icon.png" alt="Entries">
+                <span>Entries</span>
+            </div>
+        </a>
+        <a href="/stats">
+            <div>
+                <img src="/static/images/stats_icon.png" alt="Stats">
+                <span>Stats</span>
+            </div>
+        </a>
+        <a href="/journals">
+            <div>
+                <img src="/static/images/add_icon.png" alt="Journal">
+                <span>Add</span>
+            </div>
+        </a>
+        <a href="/calendar">
+            <div>
+                <img src="/static/images/calendar_icon.png" alt="Calendar">
+                <span>Calendar</span>
+            </div>
+        </a>
+        <a href="#" class="logout-link" onclick="logoutUser(event)">
+            <div>
+                <img src="/static/images/logout_icon.png" alt="Logout">
+                <span>Logout</span>
+            </div>
+        </a>
+    </div>
+
+    <!-- JavaScript for Calendar and Navigation -->
+    <script>
+        async function fetchData(endpoint) {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '/login'; // Redirect to login if no token
+                return;
+            }
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 401) {
+                    localStorage.removeItem('access_token');
+                    window.location.href = '/login';
+                } else if (response.ok) {
+                    return response.json(); // Handle the response data
+                } else {
+                    console.error('Error fetching data:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+            }
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const date = now.toLocaleDateString(undefined, options);
+            document.getElementById('current-date').innerText = date;
+        }
+
+        function renderCalendar(entries) {
+            const calendarContainer = document.querySelector('.calendar');
+            const now = new Date();
+            const month = now.getMonth();
+            const year = now.getFullYear();
+            const today = now.getDate();
+
+            // Get the first day of the month and the number of days in the month
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+
+            // Add empty cells for days before the first day
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'day empty';
+                calendarContainer.appendChild(emptyDiv);
+            }
+
+            // Add cells for each day of the month
+            for (let day = 1; day <= lastDate; day++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day';
+                if (day === today) {
+                    dayDiv.classList.add('today'); // Highlight the current day
+                }
+                dayDiv.textContent = day;
+
+                // Check if this day has any entries
+                const dateStr = `${year}-${month + 1}-${day}`;
+                if (entries[dateStr]) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'entry-indicator';
+                    dayDiv.appendChild(indicator);
+                    dayDiv.addEventListener('click', () => showDayDetails(dateStr, entries[dateStr]));
+                }
+
+                calendarContainer.appendChild(dayDiv);
+            }
+        }
+
+        function showDayDetails(date, details) {
+            const detailsDiv = document.getElementById('day-details');
+            detailsDiv.innerHTML = `<h4>${date}</h4><p>${details}</p>`;
+            detailsDiv.classList.add('active');
+        }
+
+        function hideDayDetails() {
+            const detailsDiv = document.getElementById('day-details');
+            detailsDiv.classList.remove('active');
+        }
+
+        function logoutUser(event) {
+            event.preventDefault(); // Prevent default anchor behavior
+            localStorage.removeItem('access_token'); // Remove token from local storage
+            window.location.href = '/login'; // Redirect to login page
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            updateDateTime();
+
+            // Fetch entries and render calendar
+            const moodEntries = await fetchData('/moods/');
+            const journalEntries = await fetchData('/journals/');
+            const combinedEntries = {};
+
+            // Combine mood and journal entries into a single object
+            moodEntries.forEach(entry => {
+                if (combinedEntries[entry.date]) {
+                    combinedEntries[entry.date] += `<br>${entry.details}`;
+                } else {
+                    combinedEntries[entry.date] = entry.details;
+                }
+            });
+            journalEntries.forEach(entry => {
+                if (combinedEntries[entry.date]) {
+                    combinedEntries[entry.date] += `<br>${entry.details}`;
+                } else {
+                    combinedEntries[entry.date] = entry.details;
+                }
+            });
+
+            renderCalendar(combinedEntries); // Render the calendar with entries
+        });
+
+        // Hide details popup when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.day') && !event.target.closest('#day-details')) {
+                hideDayDetails();
+            }
+        });
+    </script>
+</body>
+</html>

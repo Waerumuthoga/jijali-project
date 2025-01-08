@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Add Font Awesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Style for the entire body */
+        body {
+            background-color: #00171F; /* Rich Black */
+            color: #ADEBFF; /* Non-Photo Blue */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Header styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #003459; /* Prussian Blue */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header img {
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+        }
+
+        .header .date-container {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            margin: 0;
+            color: #ADEBFF;
+            font-weight: bold;
+        }
+
+        /* Container styles for the body content */
+        .container {
+            margin: 20px 0;
+            padding: 10px;
+            display: block; /* Stack the containers vertically */
+        }
+
+        /* Updated Box Style with Shadows and Hover Effects */
+        .container .box {
+            background-color: #003459;
+            color: #ADEBFF;
+            padding: 25px;
+            border-radius: 15px;
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Hover Effects for the boxes */
+        .container .box:hover {
+            transform: translateY(-5px); /* Lifts the box slightly on hover */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Adds a stronger shadow effect */
+        }
+
+        .container .box h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem; /* Increased font size */
+            font-weight: 600; /* Bold heading */
+            color: #ffffff; /* White color for headings */
+        }
+
+        .container .box p {
+            font-size: 1.1rem; /* Larger font size for better readability */
+            color: #ffffff;
+        }
+
+        .container .box p strong {
+            font-weight: bold;
+        }
+
+        /* Additional padding for better spacing */
+        .container .box .tip-text, .container .box .mood-text {
+            padding: 10px;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background-color: #ADEBFF;
+            padding: 10px 0;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar div {
+            text-align: center;
+            position: relative;
+        }
+
+        .navbar i {
+            font-size: 1.5rem;
+            color: #003459;
+            transition: opacity 0.3s;
+        }
+
+        .navbar i:hover {
+            opacity: 0.7;
+        }
+
+        .navbar span {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #003459;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .more-dropdown {
+            display: none;
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #003459;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar .more:hover .more-dropdown {
+            display: block;
+        }
+
+        .more-dropdown a {
+            display: block;
+            padding: 5px 10px;
+            color: #ADEBFF;
+            text-decoration: none;
+        }
+
+        .more-dropdown a:hover {
+            background-color: #FF4D4D;
+            color: #FFFFFF;
+        }
+
+        .logout-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .logout-link i {
+            font-size: 1rem;
+            margin-right: 5px;
+        }
+
+        .logout-link span {
+            font-size: 16px;
+        }
+
+        .logout-link:hover {
+            background-color: #FF4D4D;
+            color: #FFFFFF;
+        }
+
+        /* Media Query for Mobile View */
+        @media (max-width: 768px) {
+            .navbar i {
+                font-size: 1.2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header with Logo and Date -->
+    <div class="header">
+        <img src="/static/images/logo.png" alt="App Logo">
+        <div class="date-container">
+            <p id="current-date">May 2024</p>
+        </div>
+    </div>
+
+    <!-- New Containers for Self Care Tip and Mood Stats -->
+    <div class="container">
+        <!-- Self Care Tip of the Day -->
+        <div class="box">
+            <h3>Self Care Tip of the Day</h3>
+            <p class="tip-text">Remember to drink water and take breaks today!</p> <!-- This can be dynamic later -->
+        </div>
+
+        <!-- Mood Stats -->
+        <div class="box">
+            <h3>Mood Stats</h3>
+            <p class="mood-text"><strong>Average Mood:</strong> Good</p> <!-- You can make this dynamic based on actual data -->
+            <p class="mood-text"><strong>Overall Moods:</strong> 80% Positive</p>
+        </div>
+    </div>
+
+    <!-- Updated Navigation Bar with Font Awesome Icons -->
+    <div class="navbar">
+        <a href="/dashboard">
+            <div>
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </div>
+        </a>
+        <a href="/journals">
+            <div>
+                <i class="fa-regular fa-note-sticky"></i>
+                <span>Journal</span>
+            </div>
+        </a>
+        <a href="/moods">
+            <div>
+                <i class="fa-regular fa-face-laugh"></i>
+                <span>Mood</span>
+            </div>
+        </a>
+        <div class="more">
+            <div>
+                <i class="fa-solid fa-bars"></i>
+                <span>More</span>
+            </div>
+            <div class="more-dropdown">
+                <a href="/stats">Stats</a>
+                <a href="/calendar">Calendar</a>
+            </div>
+        </div>
+        <a href="#" class="logout-link" onclick="logoutUser(event)">
+            <div>
+                <i class="fa-solid fa-door-open"></i>
+                <span>Logout</span>
+            </div>
+        </a>
+    </div>
+
+    <!-- JavaScript for dynamic date and time -->
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const date = now.toLocaleDateString(undefined, options);
+            document.getElementById('current-date').innerText = date;
+        }
+
+        function logoutUser(event) {
+            event.preventDefault();
+            localStorage.removeItem('access_token');
+            window.location.href = '/login';
+        }
+
+        async function checkTokenValidity() {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch('/verify-token', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 401) {
+                    localStorage.removeItem('access_token');
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Error checking token validity:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDateTime();
+            checkTokenValidity();
+        });
+    </script>
+
+</body>
+</html>
