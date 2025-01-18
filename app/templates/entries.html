@@ -299,7 +299,14 @@
                             entryDiv.className = 'entry';
                             entryDiv.innerHTML = `
                                 <div class="entry-title">${journal.title}</div>
-                                <div class="entry-content">${JSON.stringify(journal.content)}</div>
+                                <div class="entry-todays_happenings">${journal.todays_happenings}</div>
+                                <div class="entry-special_moments">${journal.special_moments}</div>
+                                <div class="entry-redo_your_day">${journal.redo_your_day}</div>
+                                <div class="entry-handling_stress">${journal.handling_stress}</div>
+                                <div class="entry-done_different">${journal.done_different}</div>
+                                <div class="entry-thoughts_and_emotions">${journal.thoughts_and_emotions}</div>
+                                <div class="entry-gratitude">${journal.gratitude}</div>
+                                <div class="entry-goals_and_intentions">${journal.goals_and_intentions}</div>
                                 <div class="entry-actions">
                                     <button class="action-button" onclick="viewEntry(${journal.id}, 'journals')">View</button>
                                     <button class="action-button" onclick="editEntry(${journal.id}, 'journals')">Edit</button>
@@ -336,7 +343,14 @@
                             entryDiv.className = 'entry';
                             entryDiv.innerHTML = `
                                 <div class="entry-title">${mood.title}</div>
-                                <div class="entry-content">${JSON.stringify(mood.content)}</div>
+                                <div class="entry-feel">${mood.feel}</div>
+                                <div class="entry-todays_influence">${mood.todays_influence}</div>
+                                <div class="entry-mood_shift">${mood.mood_shift}</div>
+                                <div class="entry-fears_and_anxieties">${mood.fears_and_anxieties}</div>
+                                <div class="entry-affect">${mood.affect}</div>
+                                <div class="entry-steps">${mood.steps}</div>
+                                <div class="entry-main_thoughts">${mood.main_thoughts}</div>
+                                <div class="entry-support">${mood.support}</div>
                                 <div class="entry-actions">
                                     <button class="action-button" onclick="viewEntry(${mood.id}, 'moods')">View</button>
                                     <button class="action-button" onclick="editEntry(${mood.id}, 'moods')">Edit</button>

@@ -308,7 +308,7 @@
             if (!token) {
                 alert('No token found. Please log in.');
                 window.location.href = '/login';
-                return { rad: 0, good: 0, meh: 0, bad: 0, awful: 0 };
+                return { fantastic: 0, great: 0, neutral: 0, awful: 0, devastated: 0 };
             }
 
             try {
@@ -323,19 +323,19 @@
                     alert('Current session has expired. Please log in again.');
                     localStorage.removeItem('access_token');
                     window.location.href = '/login';
-                    return { rad: 0, good: 0, meh: 0, bad: 0, awful: 0 };
+                    return { fantastic: 0, great: 0, neutral: 0, awful: 0, devastated: 0 };
                 }
 
                 if (!response.ok) {
                     alert('Failed to fetch mood data.');
-                    return { rad: 0, good: 0, meh: 0, bad: 0, awful: 0 };
+                    return { fantastic: 0, great: 0, neutral: 0, awful: 0, devastated: 0 };
                 }
 
                 return await response.json();
             } catch (error) {
                 console.error('Error fetching mood data:', error);
                 alert('Error fetching mood data.');
-                return { rad: 0, good: 0, meh: 0, bad: 0, awful: 0 };
+                return { fantastic: 0, great: 0, neutral: 0, awful: 0, devastated: 0 };
             }
         }
 
@@ -346,7 +346,7 @@
             const highestMoods = Object.keys(moodData).filter(key => moodData[key] === highestMoodCount);
             const combinedHighestMoodCount = highestMoods.reduce((total, mood) => total + moodData[mood], 0);
 
-            const moodLabels = ['Rad 😎', 'Good 😊', 'Meh 😐', 'Bad 😞', 'Awful 😩'];
+            const moodLabels = ['Fantastic 😎', 'Great 😊', 'Neutral 😐', 'Awful 😞', 'Devastated 😩'];
             const highestMoodText = highestMoods.map(mood => moodLabels[Object.keys(moodData).indexOf(mood)]).join(' & ');
 
             // Update Average Mood
@@ -364,7 +364,7 @@
         function updateMoodChart(moodData) {
             const ctx = document.getElementById('moodChart').getContext('2d');
             const colors = ['#FF4D4D', '#FFB84D', '#FFEB3B', '#FF704D', '#AA4CFF'];
-            const moodLabels = ['Rad 😎', 'Good 😊', 'Meh 😐', 'Bad 😞', 'Awful 😩'];
+            const moodLabels = ['Fantastic 😎', 'Great 😊', 'Neutral 😐', 'Awful 😞', 'Devastated 😩'];
             const moodCounts = [moodData.rad, moodData.good, moodData.meh, moodData.bad, moodData.awful];
 
             // Hide Loading Spinner

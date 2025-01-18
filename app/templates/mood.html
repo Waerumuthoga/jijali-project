@@ -131,7 +131,7 @@
             border-radius: 10px;
             width: 90%;
             max-width: 700px;
-            margin: 30px auto 80px auto; /* Adjust bottom margin to ensure space for footer */
+            margin: 30px auto 80px auto;
             display: none;
         }
 
@@ -171,7 +171,7 @@
             cursor: pointer;
             transition: background-color 0.3s;
             font-size: 1.2rem;
-            width: 100%; /* Ensure button fits */
+            width: 100%;
         }
 
         .submit-btn:hover {
@@ -188,7 +188,7 @@
             position: fixed;
             bottom: 0;
             width: 100%;
-            z-index: 100; /* Ensure footer stays above content */
+            z-index: 100;
         }
 
         .navbar a {
@@ -251,7 +251,7 @@
 <body>
     <!-- Header with Logo, appname, and Logout Button -->
     <div class="header">
-        <img src="/static/images/logo.png" alt="App Logo for the Dashboard">
+        <img src="/static/images/logo.png" alt="App Logo">
         <p>Jijali Mood-Tracker</p>
 
     <!-- Logout Link -->
@@ -274,25 +274,25 @@
         <div class="form-group">
             <label for="mood">Select your mood:</label>
             <div class="mood-selection">
-                <div class="mood-emoji" data-mood="rad" role="button" aria-label="Feeling rad">
-                    <img src="/static/images/emoji-rad.png" alt="Emoji representing feeling rad">
-                    <p>Rad</p>
+                <div class="mood-emoji" data-mood="Fantastic" role="button" aria-label="Feeling fantastic">
+                    <img src="/static/images/emoji-rad.png" alt="Emoji representing feeling fantastic">
+                    <p>Fantastic</p>
                 </div>
-                <div class="mood-emoji" data-mood="good" role="button" aria-label="Feeling good">
-                    <img src="/static/images/emoji-good.png" alt="Emoji representing feeling good">
-                    <p>Good</p>
+                <div class="mood-emoji" data-mood="Great" role="button" aria-label="Feeling great">
+                    <img src="/static/images/emoji-good.png" alt="Emoji representing feeling great">
+                    <p>Great</p>
                 </div>
-                <div class="mood-emoji" data-mood="meh" role="button" aria-label="Feeling meh">
-                    <img src="/static/images/emoji-meh.png" alt="Emoji representing feeling meh">
-                    <p>Meh</p>
+                <div class="mood-emoji" data-mood="Neutral" role="button" aria-label="Feeling neutral">
+                    <img src="/static/images/emoji-meh.png" alt="Emoji representing feeling neutral">
+                    <p>Neutral</p>
                 </div>
-                <div class="mood-emoji" data-mood="bad" role="button" aria-label="Feeling bad">
-                    <img src="/static/images/emoji-bad.png" alt="Emoji representing feeling bad">
-                    <p>Bad</p>
-                </div>
-                <div class="mood-emoji" data-mood="awful" role="button" aria-label="Feeling awful">
-                    <img src="/static/images/emoji-awful.png" alt="Emoji representing feeling awful">
+                <div class="mood-emoji" data-mood="Awful" role="button" aria-label="Feeling awful">
+                    <img src="/static/images/emoji-bad.png" alt="Emoji representing feeling awful">
                     <p>Awful</p>
+                </div>
+                <div class="mood-emoji" data-mood="Devastated" role="button" aria-label="Feeling devastated">
+                    <img src="/static/images/emoji-awful.png" alt="Emoji representing feeling devastated">
+                    <p>Devastated</p>
                 </div>
             </div>
             <!-- Hidden input to store the selected mood -->
@@ -340,8 +340,8 @@
         </div>
 
         <div class="form-group">
-            <label for="negative_self_talk">Did you experience any negative self-talk today?</label>
-            <textarea name="negative_self_talk" id="negative_self_talk" placeholder="Type your thoughts here..." required></textarea>
+            <label for="negative_thoughts">Did you experience any negative self-talk today?</label>
+            <textarea name="negative_thoughts" id="negative_thoughts" placeholder="Type your thoughts here..." required></textarea>
         </div>
 
         <div class="form-group">
@@ -354,7 +354,7 @@
             <textarea name="support" id="support" placeholder="Type your thoughts here..." required></textarea>
         </div>
 
-        <button class="submit-btn" onclick="submitForm()">Save Reflection</button>
+        <button class="submit-btn"onclick="submitForm()">Save Reflection</button>
     </div>
 
     <!-- Footer with Navigation Bar -->
@@ -406,40 +406,83 @@
             });
         });
 
-        // Handle form submission
-        document.getElementById('reflection-form').addEventListener('submit', async (event) => {
-            event.preventDefault();
+        // Submit reflection form function
+        async function submitForm() {
+            console.log('Submit form triggered');
+            const title = document.getElementById('selected-mood').innerText; // Get the selected mood (title)
     
-            const token = localStorage.getItem('token');
+        // Get values from each input field in the form
+        const feel = document.getElementById('feel').value.trim();
+        const todays_influence = document.getElementById('todays_influence').value.trim();
+        const mood_shift = document.getElementById('mood_shift').value.trim();
+        const fears_and_anxieties = document.getElementById('fears_and_anxieties').value.trim();
+        const affect = document.getElementById('affect').value.trim();
+        const steps = document.getElementById('steps').value.trim();
+        const negative_thoughts = document.getElementById('negative_thoughts').value.trim();
+        const main_thoughts = document.getElementById('main_thoughts').value.trim();
+        const support = document.getElementById('support').value.trim();
+
+        // Check if any of the fields are empty and show a warning
+        if (!feel || !todays_influence || !mood_shift || !fears_and_anxieties || !affect || !steps || !negative_thoughts || !main_thoughts || !support) {
+            alert('Please fill in all fields before submitting.');
+            return;
+        }
+
+        // Prepare the data for the request
+        const data = { 
+        title, 
+        status: false,
+        mood: title,
+        feel,
+        todays_influence,
+        mood_shift,
+        fears_and_anxieties,
+        affect,
+        steps,
+        negative_thoughts,
+        main_thoughts,
+        support
+    };
+
+        try {
+            // Retrieve the token from localStorage
+            const token = localStorage.getItem('access_token');  // Ensure token is available
+
             if (!token) {
-                alert('You are not logged in.');
-                return;
+                alert('You are not logged in. Please log in first.');
+                window.location.href = '/login'; // Redirect to login if no token
+            return;
             }
 
-            const formData = new FormData(event.target);
-            const journalData = Object.fromEntries(formData.entries());
+            // Make the POST request to save the reflection
+            const response = await fetch('/moods/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`  // Send the token for authentication
+                },
+                body: JSON.stringify(data)  // Send the form data as JSON
+            });
 
-            try {
-                const response = await fetch('/mmod', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(moodData)
-                });
-
+            // Handle different response statuses
+            if (response.status === 401) {
+                alert('Session expired or not authenticated. Please log in again.');
+                window.location.href = '/login/'; // Redirect to login page
+            } else if (response.ok) {
                 const result = await response.json();
-                if (response.ok) {
-                    alert('Mood reflection saved successfully!');
-                } else {
-                    alert('Failed to save mood reflection: ' + result.message);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while saving your mood reflection.');
+                alert('Mood reflection saved successfully!');
+                window.location.href = '/dashboard/'; // Redirect to dashboard or entries page
+            } else {
+                const errorData = await response.json();
+                console.log('Server error response:', errorData);
+                alert(`Error: ${errorData.detail || 'Failed to save reflection'}`);
             }
-        });
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An unexpected error occurred');
+            }
+        }
+
 
         // Logout function
         function logoutUser(event) {

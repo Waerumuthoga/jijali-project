@@ -235,7 +235,7 @@
 
     <!-- Header with Logo, appname, and Logout Button -->
     <div class="header">
-        <img src="/static/images/logo.png" alt="App Logo for the Dashboard">
+        <img src="/static/images/logo.png" alt="App Logo">
         <p>Jijali  Journal</p>
 
     <!-- Logout Link -->
@@ -259,12 +259,12 @@
 
             <div class="form-group">
                 <label for="todays_happenings">What happened today?</label>
-                <textarea name="today" id="today" placeholder="Type your thoughts here..." required></textarea>
+                <textarea name="todays_happenings" id="todays_happenings" placeholder="Type your thoughts here..." required></textarea>
             </div>
 
             <div class="form-group">
-                <label for="special_moment">Was there any moment today that stood out to you in a special or unexpected way?</label>
-                <textarea name="special_moment" id="special_moment" placeholder="Type your thoughts here..." required></textarea>
+                <label for="special_moments">Was there any moment today that stood out to you in a special or unexpected way?</label>
+                <textarea name="special_moments" id="special_moments" placeholder="Type your thoughts here..." required></textarea>
             </div>
 
             <div class="form-group">
@@ -293,8 +293,8 @@
             </div>
 
             <div class="form-group">
-                <label for="goals_and_intention">What goal, intention or positive habit would you like to prioritize tomorrow?</label>
-                <textarea name="goals_and_intention" id="goals_and_intention" placeholder="Type your thoughts here..." required></textarea>
+                <label for="goals_and_intentions">What goal, intention or positive habit would you like to prioritize tomorrow?</label>
+                <textarea name="goals_and_intentions" id="goals_and_intentions" placeholder="Type your thoughts here..." required></textarea>
             </div>
 
             <!-- Save Button -->
@@ -336,7 +336,7 @@
             const months = ["January", "February", "March", "April", "May", "June", 
                             "July", "August", "September", "October", "November", "December"];
             const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    
+        
             const dayName = days[date.getDay()];
             const monthName = months[date.getMonth()];
             const dateOfMonth = date.getDate();
@@ -345,23 +345,23 @@
             let hours = date.getHours();
             let minutes = date.getMinutes();
             const ampm = hours >= 12 ? 'PM' : 'AM';
-    
+        
             // Convert to 12-hour format
             hours = hours % 12;
             hours = hours ? hours : 12; // Hour '0' should be '12'
             minutes = minutes < 10 ? '0' + minutes : minutes;
-    
+        
             // Return formatted date and time (e.g., "Monday, January 5, 2025, 10:30 AM")
             return `${dayName}, ${monthName} ${dateOfMonth}, ${year} - ${hours}:${minutes} ${ampm}`;
         }
-    
+
         // Update the journal title with the current date and time
         function setJournalTitle() {
             const now = new Date();
             const formattedDateTime = formatTime(now);
             document.getElementById('title').value = `Journal - ${formattedDateTime}`;
         }
-    
+
         // Set the journal title when the page loads
         window.onload = function() {
             setJournalTitle();
@@ -370,36 +370,84 @@
         // Handle form submission
         document.getElementById('journal-form').addEventListener('submit', async (event) => {
             event.preventDefault();
-    
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('You are not logged in.');
-                return;
-            }
 
-            const formData = new FormData(event.target);
-            const journalData = Object.fromEntries(formData.entries());
+            // Submit reflection form function
+            async function submitForm() {
+                console.log('Submit form triggered');
 
-            try {
-                const response = await fetch('/journal', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(journalData)
-                });
+                // Get values from each input field in the form
+                const title = document.getElementById('title').value.trim();  
+                const todays_happenings = document.getElementById('todays_happenings').value.trim();
+                const special_moments = document.getElementById('special_moments').value.trim();  
+                const redo_your_day = document.getElementById('redo_your_day').value.trim();
+                const handling_stress = document.getElementById('handling_stress').value.trim();
+                const done_different = document.getElementById('done_different').value.trim();  
+                const thoughts_and_emotions = document.getElementById('thoughts_and_emotions').value.trim();  
+                const gratitude = document.getElementById('gratitude').value.trim();
+                const goals_and_intentions = document.getElementById('goals_and_intentions').value.trim();  
 
-                const result = await response.json();
-                if (response.ok) {
-                    alert('Journal saved successfully!');
-                } else {
-                    alert('Failed to save journal: ' + result.message);
+                // Check if any required fields are empty
+                if (!title || !todays_happenings || !special_moments || !redo_your_day || !handling_stress || !done_different || !thoughts_and_emotions || !gratitude || !goals_and_intentions) {
+                    alert('Please fill in all fields before submitting.');
+                    return;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while saving your journal.');
+
+                // Prepare the data for the request
+                const data = {
+                    title,
+                    status: false,
+                    todays_happenings,
+                    special_moments,  
+                    redo_your_day,
+                    handling_stress,
+                    done_different,  
+                    thoughts_and_emotions,
+                    gratitude,
+                    goals_and_intentions
+                };
+
+                try 
+                {
+                    // Retrieve the token from localStorage
+                    const token = localStorage.getItem('access_token'); 
+
+                    if (!token) {
+                        alert('You are not logged in. Please log in first.');
+                        window.location.href = '/login'; 
+                        return;
+                    }
+
+                    // Make the POST request to save the reflection
+                    const response = await fetch('/journals/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(data)  
+                    });
+
+                    // Handle different response statuses
+                    if (response.status === 401) {
+                        alert('Session expired or not authenticated. Please log in again.');
+                        window.location.href = '/login'; 
+                        return;
+                    } else if (response.ok) {
+                        const result = await response.json();
+                        alert('Journal saved successfully!');
+                        window.location.href = '/dashboard/'; 
+                    } else {
+                        const errorData = await response.json();
+                        console.log('Server error response:', errorData);
+                        alert(`Error: ${errorData.detail || 'Failed to save journal'}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An unexpected error occurred');
+                }
             }
+
+            submitForm();
         });
 
         // Logout function
@@ -410,5 +458,7 @@
             window.location.href = "/login";
         }
     </script>
+
+        
 </body>
 </html>
