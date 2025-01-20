@@ -1,4 +1,4 @@
-#Jijali: A Self-Reflective Journal for Mental Wellbeing
+***Jijali: A Self-Reflective Journal for Mental Wellbeing***
 
 **Jijali** is a self-reflective web application designed to help users journal, track their mood, and manage mental crises in a healthy, introspective way. The app provides users with a space to reflect on their emotions, understand the causes of their feelings, and cope with mental health challenges. Whether you're seeking to enhance your emotional awareness or need immediate support, Jijali offers tools to promote mental clarity and emotional wellbeing.
 **Features**
